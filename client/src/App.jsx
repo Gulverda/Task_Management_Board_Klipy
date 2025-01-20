@@ -1,4 +1,5 @@
 import './App.css';
+import TaskBoard from './components/TaskBoard/TaskBoard';
 
 function App() {
   return (
@@ -6,6 +7,7 @@ function App() {
       <h1 className="title">
         Task Management
       </h1>
+      <TaskBoard />
     </div>
   );
 }
