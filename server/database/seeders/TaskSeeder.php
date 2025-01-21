@@ -13,13 +13,20 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        $statuses = ['To Do', 'In Progress', 'Done'];
+        $userIds = \App\Models\User::pluck('id')->toArray();
+    
+        if (empty($userIds)) {
+            // If no users exist, we can't assign an `assigned_user_id`
+            // You could add a fallback here, for example, setting a default user id or skipping insertion.
+            throw new \Exception('No users found in the database.');
+        }
 
         for ($i = 1; $i <= 10; $i++) {
             DB::table('tasks')->insert([
                 'title' => 'Task ' . $i,
                 'description' => 'This is a description for Task ' . $i,
                 'due_date' => now()->addDays(rand(1, 30)),
+                'assigned_user_id' => $userIds[array_rand($userIds)], // Randomly assign a user ID
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
