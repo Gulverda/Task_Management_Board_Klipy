@@ -19,7 +19,6 @@ class TaskSeeder extends Seeder
             DB::table('tasks')->insert([
                 'title' => 'Task ' . $i,
                 'description' => 'This is a description for Task ' . $i,
-                'status' => $statuses[array_rand($statuses)],
                 'due_date' => now()->addDays(rand(1, 30)),
                 'created_at' => now(),
                 'updated_at' => now(),
