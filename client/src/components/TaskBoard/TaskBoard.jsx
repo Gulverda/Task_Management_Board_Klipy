@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Login from '../Auth/Login/Login';
 import Register from '../Auth/Register/Register';
+import CreateTask from '../Cruds/CreateTasks/CreateTasks';
+import './TaskBoard.css';
 
 const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [tasks, setTasks] = useState([]);
   const [activeForm, setActiveForm] = useState('login');
+  const [showCreateTask, setShowCreateTask] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -19,12 +22,16 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
           })
           .then((response) => {
             setTasks(response.data);
-            // console.log('Fetched tasks:', response.data); 
+            // console.log('Fetched tasks:', response.data);
           })
           .catch((error) => console.error('Error fetching tasks:', error));
       }
     }
   }, [isLoggedIn]);
+
+  const handleCreateTask = (newTask) => {
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+  };
 
   return (
     <div className="task_board">
@@ -40,6 +47,10 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
         </div>
       ) : (
         <div>
+          <button onClick={() => setShowCreateTask(true)}>Create Task</button>
+          {showCreateTask && (
+            <CreateTask onClose={() => setShowCreateTask(false)} onTaskCreated={handleCreateTask} />
+          )}
           {tasks.length === 0 ? (
             <p>No tasks available for this user.</p>
           ) : (
