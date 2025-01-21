@@ -9,14 +9,20 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      axios
-        .get('http://127.0.0.1:8000/api/tasks', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-          },
-        })
-        .then((response) => setTasks(response.data))
-        .catch((error) => console.error('Error fetching tasks:', error));
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        axios
+          .get('http://127.0.0.1:8000/api/tasks', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setTasks(response.data);
+            // console.log('Fetched tasks:', response.data); 
+          })
+          .catch((error) => console.error('Error fetching tasks:', error));
+      }
     }
   }, [isLoggedIn]);
 
@@ -33,21 +39,20 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
           {activeForm === 'register' && <Register />}
         </div>
       ) : (
-        ['To Do', 'In Progress', 'Done'].map((status) => (
-          <div key={status} className="column">
-            <h3>{status}</h3>
-            {tasks
-              .filter((task) => task.status === status)
-              .map((task) => (
-                <div key={task.id} className="task_card">
-                  <h4>{task.title}</h4>
-                  <p>{task.description}</p>
-                  <small>Due: {task.due_date}</small>
-                  <p className="status">Status: {task.status}</p>
-                </div>
-              ))}
-          </div>
-        ))
+        <div>
+          {tasks.length === 0 ? (
+            <p>No tasks available for this user.</p>
+          ) : (
+            tasks.map((task) => (
+              <div key={task.id} className="task_card">
+                <h4>{task.title}</h4>
+                <p>{task.description}</p>
+                <small>Due: {task.due_date}</small>
+                <p className="status">Assigned User ID: {task.assigned_user_id}</p>
+              </div>
+            ))
+          )}
+        </div>
       )}
     </div>
   );
