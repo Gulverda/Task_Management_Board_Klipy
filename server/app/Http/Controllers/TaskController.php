@@ -12,7 +12,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return Task::all();
+        $user = auth()->user();
+        // return Task::all();
+        return Task::where('assigned_user_id', $user->id)->get();
+
     }
 
     /**
