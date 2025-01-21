@@ -20,14 +20,24 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+    
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date',
         ]);
-
-        return Task::create($validated);
+    
+        $validated['assigned_user_id'] = $user->id;
+    
+        $task = Task::create($validated);
+    
+        return response()->json($task, 201);
     }
+    
 
     /**
      * Update the specified resource in storage.
