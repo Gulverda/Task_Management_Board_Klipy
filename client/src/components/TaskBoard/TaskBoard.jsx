@@ -4,6 +4,7 @@ import Login from '../Auth/Login/Login';
 import Register from '../Auth/Register/Register';
 import CreateTask from '../Cruds/CreateTasks/CreateTasks';
 import UpdateTask from '../Cruds/UpdateTasks/UpdateTasks';
+import Delete from '../Cruds/DeleteTasks/Delete'; 
 import './TaskBoard.css';
 
 const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
@@ -50,6 +51,10 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
     setShowEditTask(false);
   };
 
+  const handleTaskDeleted = (taskId) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  };
+
   return (
     <div className="task_board">
       {!isLoggedIn ? (
@@ -85,7 +90,8 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
                 <small>Due: {task.due_date}</small>
                 <p className="status">Assigned User ID: {task.assigned_user_id}</p>
                 <button onClick={() => handleEditTask(task)}>Edit Task</button>
-              </div>
+                <Delete taskId={task.id} onTaskDeleted={handleTaskDeleted} />
+                </div>
             ))
           )}
         </div>
