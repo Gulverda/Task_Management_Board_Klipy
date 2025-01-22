@@ -1,11 +1,14 @@
 import React from "react";
 import axios from "axios";
+import DeleteIcon from "../../../assets/delete.svg"
 
 const Delete = ({ taskId, onTaskDeleted }) => {
   const handleDelete = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete this task?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
     if (!confirmed) {
-      return; 
+      return;
     }
 
     try {
@@ -15,7 +18,7 @@ const Delete = ({ taskId, onTaskDeleted }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      onTaskDeleted(taskId); 
+      onTaskDeleted(taskId);
       alert("Task deleted successfully.");
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -25,7 +28,7 @@ const Delete = ({ taskId, onTaskDeleted }) => {
 
   return (
     <button onClick={handleDelete} className="delete_btn">
-      Delete Task
+      <img src={DeleteIcon} alt="Delete Icon" />
     </button>
   );
 };

@@ -26,7 +26,7 @@ const App = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}> {/* Wrapping with DndProvider */}
+    <DndProvider backend={HTML5Backend}>
       <div>
         {!isLoggedIn ? (
           <div className="auth_section">
