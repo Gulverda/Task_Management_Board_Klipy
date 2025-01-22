@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend'; // You can use other backends if needed
 import TaskBoard from './components/TaskBoard/TaskBoard';
 import Login from './components/Auth/Login/Login';
 import Register from './components/Auth/Register/Register';
@@ -24,27 +26,29 @@ const App = () => {
   };
 
   return (
-    <div>
-      {!isLoggedIn ? (
-        <div className="auth_section">
-          <h2>Welcome! Please log in or register to access your tasks.</h2>
-          <div>
-            <button onClick={() => setShowRegister(false)}>Login</button>
-            <button onClick={() => setShowRegister(true)}>Register</button>
+    <DndProvider backend={HTML5Backend}> {/* Wrapping with DndProvider */}
+      <div>
+        {!isLoggedIn ? (
+          <div className="auth_section">
+            <h2>Welcome! Please log in or register to access your tasks.</h2>
+            <div>
+              <button onClick={() => setShowRegister(false)}>Login</button>
+              <button onClick={() => setShowRegister(true)}>Register</button>
+            </div>
+            {showRegister ? (
+              <Register />
+            ) : (
+              <Login onLoginSuccess={handleLoginSuccess} />
+            )}
           </div>
-          {showRegister ? (
-            <Register />
-          ) : (
-            <Login onLoginSuccess={handleLoginSuccess} />
-          )}
-        </div>
-      ) : (
-        <div>
-          <TaskBoard isLoggedIn={isLoggedIn} />
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div>
+            <TaskBoard isLoggedIn={isLoggedIn} />
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+      </div>
+    </DndProvider>
   );
 };
 

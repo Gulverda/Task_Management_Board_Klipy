@@ -4,7 +4,8 @@ import Login from '../Auth/Login/Login';
 import Register from '../Auth/Register/Register';
 import CreateTask from '../Cruds/CreateTasks/CreateTasks';
 import UpdateTask from '../Cruds/UpdateTasks/UpdateTasks';
-import Delete from '../Cruds/DeleteTasks/Delete'; 
+import Delete from '../Cruds/DeleteTasks/Delete';
+import { useDrag, useDrop } from 'react-dnd';
 import './TaskBoard.css';
 
 const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
@@ -14,6 +15,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [showEditTask, setShowEditTask] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
 
+  // Fetch tasks when the user is logged in
   useEffect(() => {
     if (isLoggedIn) {
       const token = localStorage.getItem('authToken');
@@ -26,33 +28,107 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
           })
           .then((response) => {
             setTasks(response.data);
-            // console.log('Fetched tasks:', response.data);
           })
           .catch((error) => console.error('Error fetching tasks:', error));
       }
     }
   }, [isLoggedIn]);
 
+  // Handle task creation
   const handleCreateTask = (newTask) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
+  // Handle task editing
   const handleEditTask = (task) => {
     setTaskToEdit(task);
     setShowEditTask(true);
   };
 
+  // Handle task update
   const handleUpdateTask = (updatedTask) => {
     setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === updatedTask.id ? updatedTask : task
-      )
+      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
     setShowEditTask(false);
   };
 
   const handleTaskDeleted = (taskId) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  };
+
+  const handleDrop = (taskId, newStatus) => {
+    const normalizedStatus = newStatus === 'In Progress' ? 'in_progress' : newStatus.toLowerCase();
+  
+    const updatedTasks = tasks.map((task) =>
+      task.id === taskId ? { ...task, status: normalizedStatus } : task
+    );
+    setTasks(updatedTasks);
+  
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      axios
+        .put(
+          `http://127.0.0.1:8000/api/tasks/${taskId}`,
+          { status: normalizedStatus }, // Send the normalized status
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log('Task status updated successfully:', response.data);
+        })
+        .catch((error) => {
+          console.error('Error updating task status:', error.response.data);
+        });
+    }
+  };
+  
+  
+  
+
+  // Task with drag-and-drop function
+  const Task = ({ task }) => {
+    const [{ isDragging }, drag] = useDrag(() => ({
+      type: 'TASK',
+      item: { id: task.id, status: task.status },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }));
+
+    return (
+      <div
+        ref={drag}
+        className="task_card"
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+      >
+        <h4>{task.title}</h4>
+        <p>{task.description}</p>
+        <small>Due: {task.due_date}</small>
+        <p>{task.status}</p>
+        <p className="status">Assigned User ID: {task.assigned_user_id}</p>
+        <button onClick={() => handleEditTask(task)}>Edit Task</button>
+        <Delete taskId={task.id} onTaskDeleted={handleTaskDeleted} />
+      </div>
+    );
+  };
+
+  // Column for drag-and-drop
+  const Column = ({ status, children }) => {
+    const [, drop] = useDrop(() => ({
+      accept: 'TASK',
+      drop: (item) => handleDrop(item.id, status),
+    }));
+
+    return (
+      <div ref={drop} className={`task_column ${status}`}>
+        <h3>{status}</h3>
+        {children}
+      </div>
+    );
   };
 
   return (
@@ -71,9 +147,12 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
         <div>
           <button onClick={() => setShowCreateTask(true)}>Create Task</button>
           {showCreateTask && (
-            <CreateTask onClose={() => setShowCreateTask(false)} onTaskCreated={handleCreateTask} />
+            <CreateTask
+              onClose={() => setShowCreateTask(false)}
+              onTaskCreated={handleCreateTask}
+            />
           )}
-             {showEditTask && taskToEdit && (
+          {showEditTask && taskToEdit && (
             <UpdateTask
               task={taskToEdit}
               onClose={() => setShowEditTask(false)}
@@ -81,18 +160,31 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
             />
           )}
           {tasks.length === 0 ? (
-            <p>No tasks available for this user.</p>
+            <p>No tasks available</p>
           ) : (
-            tasks.map((task) => (
-              <div key={task.id} className="task_card">
-                <h4>{task.title}</h4>
-                <p>{task.description}</p>
-                <small>Due: {task.due_date}</small>
-                <p className="status">Assigned User ID: {task.assigned_user_id}</p>
-                <button onClick={() => handleEditTask(task)}>Edit Task</button>
-                <Delete taskId={task.id} onTaskDeleted={handleTaskDeleted} />
-                </div>
-            ))
+            <div className="task_columns">
+              <Column status="Todo">
+                {tasks
+                  .filter((task) => task.status.toLowerCase() === 'todo')
+                  .map((task) => (
+                    <Task key={task.id} task={task} />
+                  ))}
+              </Column>
+              <Column status="In Progress">
+                {tasks
+                  .filter((task) => task.status.toLowerCase() === 'in_progress')
+                  .map((task) => (
+                    <Task key={task.id} task={task} />
+                  ))}
+              </Column>
+              <Column status="Done">
+                {tasks
+                  .filter((task) => task.status.toLowerCase() === 'done')
+                  .map((task) => (
+                    <Task key={task.id} task={task} />
+                  ))}
+              </Column>
+            </div>
           )}
         </div>
       )}

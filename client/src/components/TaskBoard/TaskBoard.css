@@ -35,3 +35,26 @@
   font-size: 12px;
   color: gray;
 }
+
+.task_columns {
+  display: flex;
+  gap: 20px;
+}
+
+.task_column {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  min-height: 400px;
+}
+
+.task_card {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: grab;
+}
