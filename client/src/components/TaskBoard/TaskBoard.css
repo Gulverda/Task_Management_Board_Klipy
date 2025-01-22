@@ -1,0 +1,37 @@
+.task_board {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.task_columns {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.column {
+  width: 30%;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.column h3 {
+  text-align: center;
+  font-size: 18px;
+}
+
+.task_card {
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.status {
+  font-size: 12px;
+  color: gray;
+}

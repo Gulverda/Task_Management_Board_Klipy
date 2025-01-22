@@ -3,12 +3,15 @@ import axios from 'axios';
 import Login from '../Auth/Login/Login';
 import Register from '../Auth/Register/Register';
 import CreateTask from '../Cruds/CreateTasks/CreateTasks';
+import UpdateTask from '../Cruds/UpdateTasks/UpdateTasks';
 import './TaskBoard.css';
 
 const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [tasks, setTasks] = useState([]);
   const [activeForm, setActiveForm] = useState('login');
   const [showCreateTask, setShowCreateTask] = useState(false);
+  const [showEditTask, setShowEditTask] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState(null);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -33,6 +36,20 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
+  const handleEditTask = (task) => {
+    setTaskToEdit(task);
+    setShowEditTask(true);
+  };
+
+  const handleUpdateTask = (updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+    setShowEditTask(false);
+  };
+
   return (
     <div className="task_board">
       {!isLoggedIn ? (
@@ -51,6 +68,13 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
           {showCreateTask && (
             <CreateTask onClose={() => setShowCreateTask(false)} onTaskCreated={handleCreateTask} />
           )}
+             {showEditTask && taskToEdit && (
+            <UpdateTask
+              task={taskToEdit}
+              onClose={() => setShowEditTask(false)}
+              onTaskUpdated={handleUpdateTask}
+            />
+          )}
           {tasks.length === 0 ? (
             <p>No tasks available for this user.</p>
           ) : (
@@ -60,6 +84,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
                 <p>{task.description}</p>
                 <small>Due: {task.due_date}</small>
                 <p className="status">Assigned User ID: {task.assigned_user_id}</p>
+                <button onClick={() => handleEditTask(task)}>Edit Task</button>
               </div>
             ))
           )}
