@@ -13,7 +13,7 @@ class TaskController extends Controller
     public function index()
     {
         $user = auth()->user();
-        // return Task::all();
+        // Return tasks assigned to the authenticated user
         return Task::where('assigned_user_id', $user->id)->get();
 
     }
@@ -27,20 +27,20 @@ class TaskController extends Controller
         if (!$user) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
-    
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date',
+            'status' => 'required|in:todo,in_progress,done',
         ]);
-    
+
         $validated['assigned_user_id'] = $user->id;
-    
+
         $task = Task::create($validated);
-    
+
         return response()->json($task, 201);
     }
-    
 
     /**
      * Update the specified resource in storage.
@@ -48,13 +48,31 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date',
+            'status' => 'nullable|in:todo,in_progress,done',
         ]);
 
-        $task->update($validated);
-        return $task;
+        if (isset($validated['title'])) {
+            $task->title = $validated['title'];
+        }
+
+        if (isset($validated['description'])) {
+            $task->description = $validated['description'];
+        }
+
+        if (isset($validated['due_date'])) {
+            $task->due_date = $validated['due_date'];
+        }
+
+        if (isset($validated['status'])) {
+            $task->status = $validated['status'];
+        }
+
+        $task->save();
+
+        return response()->json($task);
     }
 
     /**
@@ -64,5 +82,11 @@ class TaskController extends Controller
     {
         $task->delete();
         return response()->noContent();
+    }
+
+    public function getStatuses()
+    {
+        $statuses = Task::select('status')->distinct()->get();
+        return response()->json($statuses);
     }
 }

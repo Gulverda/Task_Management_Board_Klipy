@@ -14,6 +14,8 @@ class TaskSeeder extends Seeder
     public function run(): void
     {
         $userIds = \App\Models\User::pluck('id')->toArray();
+        $statuses = ['todo', 'in_progress', 'done'];
+
     
         if (empty($userIds)) {
             // If no users exist, we can't assign an `assigned_user_id`
@@ -27,6 +29,7 @@ class TaskSeeder extends Seeder
                 'description' => 'This is a description for Task ' . $i,
                 'due_date' => now()->addDays(rand(1, 30)),
                 'assigned_user_id' => $userIds[array_rand($userIds)], // Randomly assign a user ID
+                'status' => $statuses[array_rand($statuses)], // Randomly assign a status
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
