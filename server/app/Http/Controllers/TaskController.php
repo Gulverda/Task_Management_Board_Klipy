@@ -32,7 +32,7 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date',
-            'status' => 'required|in:todo,in_progress,done',
+            'status' => 'nullable|in:todo,in_progress,done',
         ]);
 
         $validated['assigned_user_id'] = $user->id;
