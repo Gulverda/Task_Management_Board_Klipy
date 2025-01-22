@@ -15,7 +15,6 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [showEditTask, setShowEditTask] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
 
-  // Fetch tasks when the user is logged in
   useEffect(() => {
     if (isLoggedIn) {
       const token = localStorage.getItem('authToken');
@@ -34,18 +33,15 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
     }
   }, [isLoggedIn]);
 
-  // Handle task creation
   const handleCreateTask = (newTask) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
-  // Handle task editing
   const handleEditTask = (task) => {
     setTaskToEdit(task);
     setShowEditTask(true);
   };
 
-  // Handle task update
   const handleUpdateTask = (updatedTask) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
@@ -59,18 +55,18 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
 
   const handleDrop = (taskId, newStatus) => {
     const normalizedStatus = newStatus === 'In Progress' ? 'in_progress' : newStatus.toLowerCase();
-  
+    
     const updatedTasks = tasks.map((task) =>
       task.id === taskId ? { ...task, status: normalizedStatus } : task
     );
     setTasks(updatedTasks);
-  
+
     const token = localStorage.getItem('authToken');
     if (token) {
       axios
         .put(
           `http://127.0.0.1:8000/api/tasks/${taskId}`,
-          { status: normalizedStatus }, // Send the normalized status
+          { status: normalizedStatus },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -85,9 +81,6 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
         });
     }
   };
-  
-  
-  
 
   // Task with drag-and-drop function
   const Task = ({ task }) => {
@@ -165,21 +158,21 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
             <div className="task_columns">
               <Column status="Todo">
                 {tasks
-                  .filter((task) => task.status.toLowerCase() === 'todo')
+                  .filter((task) => task.status && task.status.toLowerCase() === 'todo')
                   .map((task) => (
                     <Task key={task.id} task={task} />
                   ))}
               </Column>
               <Column status="In Progress">
                 {tasks
-                  .filter((task) => task.status.toLowerCase() === 'in_progress')
+                  .filter((task) => task.status && task.status.toLowerCase() === 'in_progress')
                   .map((task) => (
                     <Task key={task.id} task={task} />
                   ))}
               </Column>
               <Column status="Done">
                 {tasks
-                  .filter((task) => task.status.toLowerCase() === 'done')
+                  .filter((task) => task.status && task.status.toLowerCase() === 'done')
                   .map((task) => (
                     <Task key={task.id} task={task} />
                   ))}
