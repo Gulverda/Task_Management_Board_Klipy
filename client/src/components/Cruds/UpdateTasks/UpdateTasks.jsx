@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './UpdateTasks.css';
 
 const UpdateTask = ({ task, onClose, onTaskUpdated }) => {
   const [title, setTitle] = useState(task.title);
@@ -32,8 +33,8 @@ const UpdateTask = ({ task, onClose, onTaskUpdated }) => {
         )
         .then((response) => {
           onTaskUpdated(response.data);
-          alert("Update Successfully!!!") 
-          onClose(); 
+          alert("Update Successfully!!!");
+          onClose();
         })
         .catch((error) => {
           console.error('Error updating task:', error);
@@ -43,27 +44,29 @@ const UpdateTask = ({ task, onClose, onTaskUpdated }) => {
 
   return (
     <div className="update_task">
-      <h2>Edit Task</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <button type="submit">Update Task</button>
-      </form>
-      <button onClick={onClose}>Close</button>
+      <div className="update_task_modal">
+        <h2>Edit Task</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Title</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+          <button type="submit">Update Task</button>
+        </form>
+        <button className="close_button" onClick={onClose}>Close</button>
+      </div>
     </div>
   );
 };

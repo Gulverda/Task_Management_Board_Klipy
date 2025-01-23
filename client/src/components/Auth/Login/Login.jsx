@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Login.css'
 
 const Login = ({ onLoginSuccess }) => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -32,7 +33,8 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="login-form">
+    <div className="center">
+      <div className="login-form">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -65,6 +67,7 @@ const Login = ({ onLoginSuccess }) => {
 
         <button type="submit">Login</button>
       </form>
+    </div>
     </div>
   );
 };

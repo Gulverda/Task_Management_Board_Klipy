@@ -6,7 +6,7 @@ import CreateTask from "../Cruds/CreateTasks/CreateTasks";
 import UpdateTask from "../Cruds/UpdateTasks/UpdateTasks";
 import Delete from "../Cruds/DeleteTasks/Delete";
 import { useDrag, useDrop } from "react-dnd";
-import EditIcon from "../../assets/edit.svg"
+import EditIcon from "../../assets/edit.svg";
 import "./TaskBoard.css";
 import "../../../src/App.css";
 
@@ -102,17 +102,17 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
         style={{ opacity: isDragging ? 0.5 : 1 }}
       >
         <div className="card_texts">
-        <h4>{task.title}</h4>
-        <p>{task.description}</p>
-        {/* <small>Due: {task.due_date}</small> */}
-        <p>Status: {task.status}</p>
-        {/* <p className="status">Assigned User ID: {task.assigned_user_id}</p> */}
+          <h4>{task.title}</h4>
+          <p>{task.description}</p>
+          {/* <small>Due: {task.due_date}</small> */}
+          <p>Status: {task.status}</p>
+          {/* <p className="status">Assigned User ID: {task.assigned_user_id}</p> */}
         </div>
         <div className="buttons_for_cruds">
-        <button onClick={() => handleEditTask(task)}>
-          <img src={EditIcon} alt="Edit Pencil" />
-        </button>
-        <Delete taskId={task.id} onTaskDeleted={handleTaskDeleted} />
+          <button onClick={() => handleEditTask(task)}>
+            <img src={EditIcon} alt="Edit Pencil" />
+          </button>
+          <Delete taskId={task.id} onTaskDeleted={handleTaskDeleted} />
         </div>
       </div>
     );
@@ -154,17 +154,30 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
           <div>
             <button onClick={() => setShowCreateTask(true)}>Create Task</button>
             {showCreateTask && (
-              <CreateTask
-                onClose={() => setShowCreateTask(false)}
-                onTaskCreated={handleCreateTask}
-              />
+              <>
+                <div
+                  className="overlay"
+                  onClick={() => setShowCreateTask(false)}
+                ></div>
+
+                <CreateTask
+                  onClose={() => setShowCreateTask(false)}
+                  onTaskCreated={handleCreateTask}
+                />
+              </>
             )}
             {showEditTask && taskToEdit && (
-              <UpdateTask
-                task={taskToEdit}
-                onClose={() => setShowEditTask(false)}
-                onTaskUpdated={handleUpdateTask}
-              />
+              <>
+                <div
+                  className="overlay"
+                  onClick={() => setShowEditTask(false)}
+                ></div>
+                <UpdateTask
+                  task={taskToEdit}
+                  onClose={() => setShowEditTask(false)}
+                  onTaskUpdated={handleUpdateTask}
+                />
+              </>
             )}
             {tasks.length === 0 ? (
               <p>No tasks available</p>

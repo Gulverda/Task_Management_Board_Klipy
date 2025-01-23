@@ -1,0 +1,148 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.create_task {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 550px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: hidden;
+}
+
+.create_task h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.create_task form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.create_task label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #444;
+}
+
+.create_task input,
+.create_task textarea {
+  padding: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: border 0.3s ease;
+  background-color: #fafafa;
+  width: 100%;
+}
+
+.create_task input:focus,
+.create_task textarea:focus {
+  border: 1px solid #4CAF50;
+  outline: none;
+  background-color: #fff;
+}
+
+.create_task textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.create_task button {
+  background-color: #4caf50;
+  color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.create_task button:hover {
+  background-color: #309e34;
+}
+
+.create_task .close-btn {
+  background-color: #f44336;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
+}
+
+.create_task .close-btn:hover {
+  background-color: #e53935;
+}
+
+@media (max-width: 768px) {
+  .create_task {
+    width: 90%;
+    max-width: 450px;
+    padding: 1.5rem;
+  }
+
+  .create_task h2 {
+    font-size: 1.6rem;
+  }
+
+  .create_task input,
+  .create_task textarea,
+  .create_task button {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+
+  .create_task .close-btn {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .create_task {
+    width: 95%;
+    max-width: 350px;
+    padding: 1.2rem;
+  }
+
+  .create_task h2 {
+    font-size: 1.4rem;
+  }
+
+  .create_task input,
+  .create_task textarea,
+  .create_task button {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+
+  .create_task .close-btn {
+    padding: 0.7rem;
+  }
+}

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './CreateTasks.css';
 
 const CreateTask = ({ onClose, onTaskCreated }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
-
 
   useEffect(() => {
     const currentDate = new Date();
@@ -68,12 +68,12 @@ const CreateTask = ({ onClose, onTaskCreated }) => {
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            disabled 
+            disabled
           />
         </div>
         <button type="submit">Create Task</button>
       </form>
-      <button onClick={onClose}>Close</button>
+      <button onClick={onClose} className="close-btn">Close</button>
     </div>
   );
 };
