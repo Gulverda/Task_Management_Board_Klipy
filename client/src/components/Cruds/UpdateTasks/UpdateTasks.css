@@ -14,7 +14,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: #e2e8f0;
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
@@ -54,13 +54,12 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   transition: border 0.3s ease;
-  background-color: #fafafa;
   width: 100%;
 }
 
 .update_task input:focus,
 .update_task textarea:focus {
-  border: 1px solid #4caf50;
+  border: 1px solid #4F46E5;
   outline: none;
   background-color: #fff;
 }
@@ -71,7 +70,7 @@
 }
 
 .update_task button {
-  background-color: #4caf50;
+  background-color: #4F46E5;
   color: white;
   padding: 1rem;
   border: none;
@@ -83,7 +82,7 @@
 }
 
 .update_task button:hover {
-  background-color: #309e34;
+  background-color: #4238f7;
 }
 
 .update_task .close_button {
