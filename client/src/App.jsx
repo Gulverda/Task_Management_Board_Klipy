@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import TaskBoard from './components/TaskBoard/TaskBoard';
 import Navbar from './components/Navbar/Navbar';
 import Login from './components/Auth/Login/Login';
@@ -44,35 +45,43 @@ const App = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div>
-        <Navbar
-          userName={isLoggedIn ? userName : null}
-          onLogout={handleLogout}
-          onCreateTask={() => setIsCreateTaskVisible(true)}
-          onLoginClick={handleLoginClick}
-          onRegisterClick={handleRegisterClick}
-          isLoggedIn={isLoggedIn}
-        />
-
-        {!isLoggedIn ? (
-          <div className="auth_section">
-            <h2>Welcome! Please log in or register to access your tasks.</h2>
-            {showRegister ? (
-              <Register />
-            ) : (
-              <Login onLoginSuccess={handleLoginSuccess} />
-            )}
-          </div>
-        ) : (
-          <TaskBoard
+    <Router>
+      <DndProvider backend={HTML5Backend}>
+        <div>
+          <Navbar
+            userName={isLoggedIn ? userName : null}
+            onLogout={handleLogout}
+            onCreateTask={() => setIsCreateTaskVisible(true)}
+            onLoginClick={handleLoginClick}
+            onRegisterClick={handleRegisterClick}
             isLoggedIn={isLoggedIn}
-            onCreateTask={isCreateTaskVisible}
-            onCloseCreateTask={() => setIsCreateTaskVisible(false)}
           />
-        )}
-      </div>
-    </DndProvider>
+          
+          <Routes>
+            {/* Public Route for Login/Register */}
+            <Route path="/" element={!isLoggedIn ? (
+              <div className="auth_section">
+                <h2>Welcome! Please log in or register to access your tasks.</h2>
+                {showRegister ? (
+                  <Register />
+                ) : (
+                  <Login onLoginSuccess={handleLoginSuccess} />
+                )}
+              </div>
+            ) : <Navigate to="/taskboard" />} />
+            
+            {/* Private Route for TaskBoard */}
+            <Route path="/taskboard" element={isLoggedIn ? (
+              <TaskBoard
+                isLoggedIn={isLoggedIn}
+                onCreateTask={isCreateTaskVisible}
+                onCloseCreateTask={() => setIsCreateTaskVisible(false)}
+              />
+            ) : <Navigate to="/" />} />
+          </Routes>
+        </div>
+      </DndProvider>
+    </Router>
   );
 };
 
