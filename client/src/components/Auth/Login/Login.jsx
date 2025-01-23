@@ -17,10 +17,13 @@ const Login = ({ onLoginSuccess }) => {
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/login', formData);
+      console.log('Backend Response:', response.data); 
 
       localStorage.setItem('authToken', response.data.token);
+      localStorage.setItem('userName', response.data.name || '');
 
-      onLoginSuccess(response.data.token);
+      onLoginSuccess(response.data.name);
+
       console.log('Login successful:', response.data);
     } catch (error) {
       if (error.response && error.response.data) {

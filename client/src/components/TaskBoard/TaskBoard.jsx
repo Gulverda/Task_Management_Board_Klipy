@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Login from "../Auth/Login/Login";
 import Register from "../Auth/Register/Register";
-import CreateTask from "../Cruds/CreateTasks/CreateTasks";
 import UpdateTask from "../Cruds/UpdateTasks/UpdateTasks";
 import Delete from "../Cruds/DeleteTasks/Delete";
 import { useDrag, useDrop } from "react-dnd";
@@ -13,7 +12,6 @@ import "../../../src/App.css";
 const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [tasks, setTasks] = useState([]);
   const [activeForm, setActiveForm] = useState("login");
-  const [showCreateTask, setShowCreateTask] = useState(false);
   const [showEditTask, setShowEditTask] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
 
@@ -34,10 +32,6 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
       }
     }
   }, [isLoggedIn]);
-
-  const handleCreateTask = (newTask) => {
-    setTasks((prevTasks) => [...prevTasks, newTask]);
-  };
 
   const handleEditTask = (task) => {
     setTaskToEdit(task);
@@ -152,20 +146,6 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
           </div>
         ) : (
           <div>
-            <button onClick={() => setShowCreateTask(true)}>Create Task</button>
-            {showCreateTask && (
-              <>
-                <div
-                  className="overlay"
-                  onClick={() => setShowCreateTask(false)}
-                ></div>
-
-                <CreateTask
-                  onClose={() => setShowCreateTask(false)}
-                  onTaskCreated={handleCreateTask}
-                />
-              </>
-            )}
             {showEditTask && taskToEdit && (
               <>
                 <div
