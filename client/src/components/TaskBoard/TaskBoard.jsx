@@ -16,21 +16,28 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [taskToEdit, setTaskToEdit] = useState(null);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      const token = localStorage.getItem("authToken");
-      if (token) {
-        axios
-          .get("http://127.0.0.1:8000/api/tasks", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            setTasks(response.data);
-          })
-          .catch((error) => console.error("Error fetching tasks:", error));
+    const fetchTasks = () => {
+      if (isLoggedIn) {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+          axios
+            .get("http://127.0.0.1:8000/api/tasks", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((response) => {
+              setTasks(response.data);
+            })
+            .catch((error) => console.error("Error fetching tasks:", error));
+        }
       }
-    }
+    };
+
+    fetchTasks();
+    const interval = setInterval(fetchTasks, 5000);
+
+    return () => clearInterval(interval); 
   }, [isLoggedIn]);
 
   const handleEditTask = (task) => {
@@ -159,43 +166,35 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
                 />
               </>
             )}
-            {tasks.length === 0 ? (
-              <p>No tasks available</p>
-            ) : (
-              <div className="task_columns">
-                <Column status="Todo">
-                  {tasks
-                    .filter(
-                      (task) =>
-                        task.status && task.status.toLowerCase() === "todo"
-                    )
-                    .map((task) => (
-                      <Task key={task.id} task={task} />
-                    ))}
-                </Column>
-                <Column status="In Progress">
-                  {tasks
-                    .filter(
-                      (task) =>
-                        task.status &&
-                        task.status.toLowerCase() === "in_progress"
-                    )
-                    .map((task) => (
-                      <Task key={task.id} task={task} />
-                    ))}
-                </Column>
-                <Column status="Done">
-                  {tasks
-                    .filter(
-                      (task) =>
-                        task.status && task.status.toLowerCase() === "done"
-                    )
-                    .map((task) => (
-                      <Task key={task.id} task={task} />
-                    ))}
-                </Column>
-              </div>
-            )}
+            <div className="task_columns">
+              <Column status="Todo">
+                {tasks.length === 0 ? (
+                  <p>No tasks available</p>
+                ) : (
+                  tasks
+                    .filter((task) => task.status.toLowerCase() === "todo")
+                    .map((task) => <Task key={task.id} task={task} />)
+                )}
+              </Column>
+              <Column status="In Progress">
+                {tasks.length === 0 ? (
+                  <p>No tasks available</p>
+                ) : (
+                  tasks
+                    .filter((task) => task.status.toLowerCase() === "in_progress")
+                    .map((task) => <Task key={task.id} task={task} />)
+                )}
+              </Column>
+              <Column status="Done">
+                {tasks.length === 0 ? (
+                  <p>No tasks available</p>
+                ) : (
+                  tasks
+                    .filter((task) => task.status.toLowerCase() === "done")
+                    .map((task) => <Task key={task.id} task={task} />)
+                )}
+              </Column>
+            </div>
           </div>
         )}
       </div>
