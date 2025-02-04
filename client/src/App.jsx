@@ -16,12 +16,15 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     const storedName = localStorage.getItem('userName');
-
+  
+    console.log("Retrieved userName from localStorage:", storedName);
+  
     if (token && storedName) {
       setIsLoggedIn(true);
       setUserName(storedName);
     }
-  }, []);
+  }, [isLoggedIn]); 
+  
 
   const handleLoginSuccess = (name) => {
     setIsLoggedIn(true);

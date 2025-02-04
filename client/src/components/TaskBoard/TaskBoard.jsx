@@ -9,6 +9,8 @@ import EditIcon from "../../assets/edit.svg";
 import "./TaskBoard.css";
 import "../../../src/App.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [tasks, setTasks] = useState([]);
   const [activeForm, setActiveForm] = useState("login");
@@ -21,7 +23,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
         const token = localStorage.getItem("authToken");
         if (token) {
           axios
-            .get("http://127.0.0.1:8000/api/tasks", {
+            .get(`${API_URL}/tasks`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -47,13 +49,13 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
 
   const handleUpdateTask = (updatedTask) => {
     setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+      prevTasks.map((task) => (task._id === updatedTask._id ? updatedTask : task))
     );
     setShowEditTask(false);
   };
 
   const handleTaskDeleted = (taskId) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
   };
 
   const handleDrop = (taskId, newStatus) => {
@@ -61,7 +63,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
       newStatus === "In Progress" ? "in_progress" : newStatus.toLowerCase();
 
     const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, status: normalizedStatus } : task
+      task._id === taskId ? { ...task, status: normalizedStatus } : task
     );
     setTasks(updatedTasks);
 
@@ -69,7 +71,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
     if (token) {
       axios
         .put(
-          `http://127.0.0.1:8000/api/tasks/${taskId}`,
+          `${API_URL}/tasks/${taskId}`,
           { status: normalizedStatus },
           {
             headers: {
@@ -90,7 +92,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const Task = ({ task }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
       type: "TASK",
-      item: { id: task.id, status: task.status },
+      item: { id: task._id, status: task.status },
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
       }),
@@ -113,7 +115,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
           <button onClick={() => handleEditTask(task)}>
             <img src={EditIcon} alt="Edit Pencil" />
           </button>
-          <Delete taskId={task.id} onTaskDeleted={handleTaskDeleted} />
+          <Delete taskId={task._id} onTaskDeleted={handleTaskDeleted} />
         </div>
       </div>
     );
@@ -173,7 +175,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
                 ) : (
                   tasks
                     .filter((task) => task.status.toLowerCase() === "todo")
-                    .map((task) => <Task key={task.id} task={task} />)
+                    .map((task) => <Task key={task._id} task={task} />)
                 )}
               </Column>
               <Column status="In Progress">
@@ -182,7 +184,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
                 ) : (
                   tasks
                     .filter((task) => task.status.toLowerCase() === "in_progress")
-                    .map((task) => <Task key={task.id} task={task} />)
+                    .map((task) => <Task key={task._id} task={task} />)
                 )}
               </Column>
               <Column status="Done">
@@ -191,7 +193,7 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
                 ) : (
                   tasks
                     .filter((task) => task.status.toLowerCase() === "done")
-                    .map((task) => <Task key={task.id} task={task} />)
+                    .map((task) => <Task key={task._id} task={task} />)
                 )}
               </Column>
             </div>

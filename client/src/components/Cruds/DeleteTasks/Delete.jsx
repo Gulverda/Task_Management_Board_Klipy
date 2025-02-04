@@ -3,6 +3,8 @@ import axios from "axios";
 import DeleteIcon from "../../../assets/delete.svg"
 
 const Delete = ({ taskId, onTaskDeleted }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleDelete = async () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this task?"
@@ -13,7 +15,7 @@ const Delete = ({ taskId, onTaskDeleted }) => {
 
     try {
       const token = localStorage.getItem("authToken");
-      await axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}`, {
+      await axios.delete(`${API_URL}/tasks/${taskId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

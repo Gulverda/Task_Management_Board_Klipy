@@ -3,6 +3,8 @@ import axios from 'axios';
 import './Register.css'
 
 const Register = ({ onRegisterSuccess = () => {} }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,7 +25,7 @@ const Register = ({ onRegisterSuccess = () => {} }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/register', formData);
+      const response = await axios.post(`${API_URL}/auth/register`, formData);
 
       onRegisterSuccess(response.data.token);
       console.log('Registration successful:', response.data);

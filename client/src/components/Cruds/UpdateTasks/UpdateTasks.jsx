@@ -3,6 +3,8 @@ import axios from 'axios';
 import './UpdateTasks.css';
 
 const UpdateTask = ({ task, onClose, onTaskUpdated }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [dueDate, setDueDate] = useState(task.due_date);
@@ -19,7 +21,7 @@ const UpdateTask = ({ task, onClose, onTaskUpdated }) => {
     if (token) {
       axios
         .put(
-          `http://127.0.0.1:8000/api/tasks/${task.id}`,
+          `${API_URL}/tasks/${task._id}`,
           {
             title,
             description,

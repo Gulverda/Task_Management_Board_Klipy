@@ -3,6 +3,8 @@ import axios from 'axios';
 import './CreateTasks.css';
 
 const CreateTask = ({ onClose, onTaskCreated }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -19,7 +21,7 @@ const CreateTask = ({ onClose, onTaskCreated }) => {
     if (token) {
       axios
         .post(
-          'http://127.0.0.1:8000/api/tasks',
+          `${API_URL}/tasks`,
           {
             title,
             description,

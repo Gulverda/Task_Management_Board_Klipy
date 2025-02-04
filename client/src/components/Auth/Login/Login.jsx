@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Login.css'
 
+
 const Login = ({ onLoginSuccess }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -16,13 +19,13 @@ const Login = ({ onLoginSuccess }) => {
     setErrorMessage('');
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login', formData);
+      const response = await axios.post(`${API_URL}/auth/login`, formData);
       console.log('Backend Response:', response.data); 
 
       localStorage.setItem('authToken', response.data.token);
-      localStorage.setItem('userName', response.data.name || '');
-
       onLoginSuccess(response.data.name);
+      localStorage.setItem('userName', response.data.name || 'User');
+
 
       console.log('Login successful:', response.data);
     } catch (error) {
