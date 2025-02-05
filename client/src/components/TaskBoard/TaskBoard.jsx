@@ -4,17 +4,12 @@ import Login from "../Auth/Login/Login";
 import Register from "../Auth/Register/Register";
 import UpdateTask from "../Cruds/UpdateTasks/UpdateTasks";
 import Delete from "../Cruds/DeleteTasks/Delete";
-import { useDrag, useDrop, DndProvider } from "react-dnd";
-import { TouchBackend } from "react-dnd-touch-backend";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useDrag, useDrop } from "react-dnd";
 import EditIcon from "../../assets/edit.svg";
 import "./TaskBoard.css";
 import "../../../src/App.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
-
-const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-
 
 const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [tasks, setTasks] = useState([]);
@@ -92,7 +87,6 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
         });
     }
   };
-  
 
   // Task with drag-and-drop function
   const Task = ({ task }) => {
@@ -143,10 +137,6 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   };
 
   return (
-    <DndProvider
-    backend={isTouchDevice ? TouchBackend : HTML5Backend}
-    options={isTouchDevice ? { enableMouseEvents: true, preventScroll: true } : {}}
-  >
     <div className="center">
       <div className="task_board">
         {!isLoggedIn ? (
@@ -211,7 +201,6 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
         )}
       </div>
     </div>
-    </DndProvider>
   );
 };
 

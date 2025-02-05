@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from "react-dnd-touch-backend";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import TaskBoard from './components/TaskBoard/TaskBoard';
 import Navbar from './components/Navbar/Navbar';
@@ -25,6 +26,8 @@ const App = () => {
     }
   }, [isLoggedIn]); 
   
+  const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
 
   const handleLoginSuccess = (name) => {
     setIsLoggedIn(true);
@@ -49,8 +52,10 @@ const App = () => {
 
   return (
     <Router>
-      <DndProvider backend={HTML5Backend}>
-        <div>
+    <DndProvider
+    backend={isTouchDevice ? TouchBackend : HTML5Backend}
+    options={isTouchDevice ? { enableMouseEvents: true, preventScroll: true } : {}}
+  >        <div>
           <Navbar
             userName={isLoggedIn ? userName : null}
             onLogout={handleLogout}
