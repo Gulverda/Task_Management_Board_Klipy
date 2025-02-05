@@ -71,8 +71,8 @@ const App = () => {
               <div className="auth_section">
                 <h2>Welcome! Please log in or register to access your tasks.</h2>
                 {showRegister ? (
-                  <Register />
-                ) : (
+          <Register onRegisterSuccess={() => setShowRegister(false)} />
+        ) : (
                   <Login onLoginSuccess={handleLoginSuccess} />
                 )}
               </div>

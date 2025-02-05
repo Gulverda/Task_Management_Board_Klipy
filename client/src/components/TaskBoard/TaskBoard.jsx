@@ -17,6 +17,17 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
   const [showEditTask, setShowEditTask] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
 
+  const handleRegisterSuccess = (token) => {
+    console.log("Registration successful:", token);
+    setActiveForm("login"); 
+  };
+
+  const handleLoginRedirect = () => {
+    setActiveForm("login");
+  };
+
+
+
   useEffect(() => {
     const fetchTasks = () => {
       if (isLoggedIn) {
@@ -151,7 +162,9 @@ const TaskBoard = ({ isLoggedIn, onLoginSuccess }) => {
             {activeForm === "login" && (
               <Login onLoginSuccess={onLoginSuccess} />
             )}
-            {activeForm === "register" && <Register />}
+            {activeForm === "register" && (
+              <Register onRegisterSuccess={handleRegisterSuccess} onLoginRedirect={handleLoginRedirect} />
+            )}
           </div>
         ) : (
           <div>
